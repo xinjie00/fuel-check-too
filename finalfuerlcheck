@@ -1,0 +1,132 @@
+#import module to read csv file
+import csv
+
+#read file data
+file = open('annualmvpop_dataset.csv')
+csv_reader = csv.reader(file)
+
+#store header of the file in a list name header
+header = []
+header = next(csv_reader)
+
+#store the data in a list name rows
+rows = []
+for row in csv_reader:
+    #add rows in list
+    rows.append(row)
+#print(rows)
+
+#mehtod to display the fuel types with corrosponding numbers
+def display_fuel_types():
+    print('1 - Diesel\n'
+          '2 - Diesel-Electric\n'
+          '3 - Electric\n'
+          '4 - Petrol\n'
+          '5 - Petrol-CNG\n'
+          '6 - Petrol-Electric\n'
+          '7 - Petrol-Electric (Plug-In)\n')
+
+#method that display the price of selected type fuel and selected year
+def fuel_prices_of_a_specific_year_of_selected_type():
+    #initialize variables
+    counter = 0
+    index = 0
+    #method call to display fuel types
+    display_fuel_types()
+    # take type and year from user
+    type = int(input('Enter selected fuel type in integer (1 -7): '))
+    year = input('Enter selected year in integer (2006 - 2018): ')
+
+    #get the index of selected year
+    for h in header:
+        if h == year:
+            break
+        index += 1
+
+    #iterate through selected type row and get the price of selected year
+    for number in rows[type - 1]:
+        if counter == 0:
+            counter += 1
+            continue
+        else:
+            if counter == index:
+                #display price
+                print('Fuel price of a specific year for a selected type: ', number)
+            counter += 1
+
+#mehtod to calculate the total price of selected fuel type
+def total_prices_of_a_selcted_type():
+    #call method to display types
+    display_fuel_types()
+    #input type from user
+    type = int(input('Enter selected fuel type in integer (1 -7): '))
+    counter = 0
+    #varaible for holding sum
+    sum = 0
+    #iterate through selected type and sum of prices
+    for number in rows[type - 1]:
+        if counter == 0:
+            counter += 1
+            continue
+        else:
+            sum += int(number)
+    #display total
+    print('The total fuel price of a selected type: ', sum)
+#mehtod to calculate max three from selected fuel type
+def three_max_prices():
+    #call method to display fuel types
+    display_fuel_types()
+    #input type from user
+    type = int(input('Enter selected fuel type in integer (1 -7): '))
+    print('Maximum three prices...')
+    #make copy of selected type list
+    temp = rows[type - 1].copy()
+    #loop for range 3 to calculate three max numbers
+    for i in range(3):
+        counter = 0
+        max = rows[type - 1][1]
+        for number in temp:
+            if counter == 0:
+                counter += 1
+                continue
+            else:
+                #calculate maximum price
+                if int(number) > int(max):
+                    max = int(number)
+                counter += 1
+        #get index of max price
+        index = rows[type -1].index(str(max))
+        #display year and price
+        print('Year: ', header[index], ', Price: ', max)
+        #remove the max from temp list
+        temp.remove(str(max))
+#method to show the menu
+def show_menu():
+    print('1. Fuel price of a specific year for a selected type.\n'
+          '2. The total fuel price of a selected type.\n'
+          '3. The top three highest fuel prices and its corresponding years in a selected type.\n'
+          '4. Exit.')
+#main method
+def main():
+    #display menu untill user enter 4
+    while True:
+        #call method to show menu
+        show_menu()
+        #take choice from user
+        choice = input('Enter choice: ')
+        #checks on choice
+        if choice == '1':
+            fuel_prices_of_a_specific_year_of_selected_type()
+        elif choice == '2':
+            total_prices_of_a_selcted_type()
+        elif choice == '3':
+            three_max_prices()
+        elif choice == '4':
+            break
+        else:
+            print('invalid choice...')
+
+#from here the execution start
+if __name__ == '__main__':
+    #calling main method
+    main()
